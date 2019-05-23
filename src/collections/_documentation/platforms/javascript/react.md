@@ -3,8 +3,31 @@ title: React
 sidebar_order: 30
 ---
 <!-- WIZARD -->
-To use Sentry with your React application, you will need to use `@sentry/browser` (Sentry’s browser JavaScript SDK).  
-On its own, `@sentry/browser` will report any uncaught exceptions triggered from your application.
+To use Sentry with your React application, you will need to use Sentry’s browser JavaScript SDK: `@sentry/browser`.
+
+```bash
+# Using yarn
+$ yarn add @sentry/browser
+
+# Using npm
+$ npm install @sentry/browser
+```
+
+On its own, `@sentry/browser` will report any uncaught exceptions triggered by your application.
+
+Initialize Sentry before your application renders
+
+```jsx
+import React from 'react';
+import * as Sentry from '@sentry/browser';
+
+import MyApp from 'src/app';
+
+Sentry.init({dsn: "___PUBLIC_DSN___"});
+
+ReactDOM.render(<MyApp />, document.getElementById('root'));
+```
+#### React Error Boundaries
 
 If you’re using React 16 or above, Error Boundaries are an important tool for defining the behavior of your application in the face of errors. Be sure to send errors they catch to Sentry using `Sentry.captureException`. This is also a great opportunity to collect user feedback by using `Sentry.showReportDialog`.
 
@@ -18,13 +41,8 @@ One important thing to note about the behavior of error boundaries in developmen
 %}
 
 ```jsx
+import React from 'react';
 import * as Sentry from '@sentry/browser';
-
-// Sentry.init({
-//  dsn: "___PUBLIC_DSN___"
-// });
-// should have been called before using it here
-// ideally before even rendering your react app
 
 class ExampleBoundary extends Component {
     constructor(props) {
@@ -47,11 +65,21 @@ class ExampleBoundary extends Component {
             return (
               <a onClick={() => Sentry.showReportDialog({ eventId: this.state.eventId })}>Report feedback</a>
             );
-        } else {
-            //when there's not an error, render children untouched
-            return this.props.children;
         }
+
+        //when there's not an error, render children untouched
+        return this.props.children;
     }
 }
+```
+
+#### Verifying your Installation
+
+You can trigger your first event from your development environment by raising
+an exception somewhere within your application. A simple example of this would
+be rendering a button like so:
+
+```jsx
+return <button onClick={methodDoesNotExist}>Break the world</button>;
 ```
 <!-- ENDWIZARD -->
