@@ -127,6 +127,8 @@ The SDK can also be configured via `NLog.config` XML file:
 ```
 
 ### Options
+The following options are specific to this integration, but extend the standard [Sentry]({%- link _documentation/platforms/dotnet/index.md -%}) options.
+Refer to the documentation of those base options to see what else can be configured. 
 
 #### MinimumBreadcrumbLevel
 
